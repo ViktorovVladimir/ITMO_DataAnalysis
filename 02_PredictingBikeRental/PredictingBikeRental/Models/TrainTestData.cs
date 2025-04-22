@@ -1,7 +1,7 @@
 using Microsoft.ML;
 using Microsoft.ML.Data;
 
-namespace IncomePrediction.Models
+namespace PredictingBikeRental.Models
 {
     //--. Class for storing separated training and test samples
     public class TrainTestData
