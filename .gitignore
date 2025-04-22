@@ -31,3 +31,5 @@
 *.out
 *.app
 /01_IncomePrediction/.vs
+/01_IncomePrediction/IncomePrediction/bin
+/01_IncomePrediction/IncomePrediction/obj
