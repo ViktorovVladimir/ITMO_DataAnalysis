@@ -95,10 +95,16 @@ namespace PredictingBikeRental
 
 
 
+                //--. Step 5: Save the model for later use without wasting time on training
+                Console.WriteLine("\nStep 5: Save the model for later use without wasting time on training...");
+                Console.WriteLine("------");
+                mlContext.Model.Save( bestModel, trainTestData.TrainSet.Schema, "BikeRentalModel.zip" );
+                Console.WriteLine("\t*Saving the model completed successfully!\n");
+
 
 
             }
-            catch( Exception ex )
+            catch ( Exception ex )
             {
                 Console.WriteLine($"\nError: {ex.Message}");
                 Console.WriteLine(ex.StackTrace);
