@@ -36,5 +36,13 @@ namespace PredictingBikeRental.Models
 
         [LoadColumn(10)]
         public bool RentalType { get; set; } // 0 = short-term, 1 = long-term
+
+        //--.
+        public override string ToString()
+        {
+            return $"\tSeason: {Season}\n\t\t\tMonth: {Month}\n\t\t\tHour: {Hour}\n\t\t\tHoliday: {Holiday}\n\t\t\t" +
+                   $"Weekday: {Weekday}\n\t\t\tWorkingDay: {WorkingDay}\n\t\t\tWeatherCondition: {WeatherCondition}\n\t\t\t" +
+                   $"Temperature: {Temperature}°C\n\t\t\tHumidity: {Humidity}%\n\t\t\tWindspeed: {Windspeed} km/h";
+        }
     }
 }

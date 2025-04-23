@@ -58,11 +58,11 @@ namespace PredictingBikeRental.Training
 
 
         //--.
-        public ITransformer TrainMultipleModels(IEstimator<ITransformer> dataPrepPipeline, IDataView trainData)
+        public ITransformer TrainMultipleModels(IEstimator<ITransformer> dataPrepPipeline, IDataView trainData, IDataView testData)
         {
             var models = new List<(string Name, ITransformer Model, double Accuracy)>();
 
-            // Список алгоритмов для обучения
+            //--. List of algorithms for training
             var trainers = new List<(string Name, IEstimator<ITransformer> Estimator)>
             {
                 ("SDCA Logistic Regression", _mlContext.BinaryClassification.Trainers.SdcaLogisticRegression()),
@@ -71,22 +71,22 @@ namespace PredictingBikeRental.Training
             };
 
             //--.
-            foreach (var trainer in trainers)
+            foreach( var trainer in trainers )
             {
-                Console.WriteLine($"Training model: {trainer.Name}");
+                Console.WriteLine($"\t*Training model: {trainer.Name}...");
                 var pipeline = dataPrepPipeline.Append(trainer.Estimator);
 
                 var model = pipeline.Fit(trainData);
-                var predictions = model.Transform(trainData);
+                var predictions = model.Transform(testData);        //<-- test, not train data!!!
                 var metrics = _mlContext.BinaryClassification.Evaluate(predictions);
 
                 models.Add((trainer.Name, model, metrics.Accuracy));
-                Console.WriteLine($"Model: {trainer.Name}, Accuracy: {metrics.Accuracy:F4}");
+                Console.WriteLine($"\t*Model: {trainer.Name}, Accuracy: {metrics.Accuracy:F4}");
             }
 
-            // Выбор лучшей модели
+            //--. Choosing the best model
             var bestModel = models.OrderByDescending(m => m.Accuracy).First();
-            Console.WriteLine($"Best Model: {bestModel.Name} with Accuracy: {bestModel.Accuracy:F4}");
+            Console.WriteLine($"\t**Best Model: {bestModel.Name} with Accuracy: {bestModel.Accuracy:F4}");
 
             return bestModel.Model;
         }

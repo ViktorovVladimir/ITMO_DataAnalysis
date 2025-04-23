@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using PredictingBikeRental.DataProcessing;
+using PredictingBikeRental.Models;
 using PredictingBikeRental.Training;
 
 namespace PredictingBikeRental
@@ -45,21 +46,57 @@ namespace PredictingBikeRental
                 var dataPrepPipeline = dataProcessor.CreateDataProcessingPipeline();
 
                 // 5. Обучение моделей и выбор лучшей
-                // TODO: Реализовать обучение нескольких моделей и сравнить их
                 //--. Step 3: Training a simplified model
                 // 6. Оценка качества модели
-                // 7. Выполнение предсказаний
                 Console.WriteLine("\nStep 3: Model training...");
+                Console.WriteLine("        *Training models and choosing the best one...");
                 Console.WriteLine("------");
                 var modelTrainer = new ModelTrainer( mlContext );
                 //var model = modelTrainer.TrainAndCompareModels( dataPrepPipeline, trainTestData.TrainSet );
-                var bestModel = modelTrainer.TrainMultipleModels(dataPrepPipeline, trainTestData.TrainSet);
+                var bestModel = modelTrainer.TrainMultipleModels( dataPrepPipeline, trainTestData.TrainSet, trainTestData.TestSet );
+                
+                Console.WriteLine("\nTraining completed successfully!\n");
 
-                //IDataView newData = ... 
-                //MakePredictions(bestModel, newData);
 
 
-                Console.WriteLine("Training completed successfully!");
+                // 7. Выполнение предсказаний
+                //--. Step 4: Making predictions
+                //4.1. Preparing a model for prediction
+                Console.WriteLine("\nStep 4: Making predictions...");
+                Console.WriteLine("------");
+
+
+                var predictor = mlContext.Model.CreatePredictionEngine<BikeRentalData, RentalTypePrediction>(bestModel);
+                
+                //4.2. We prepare any of our data for which we will receive a prediction
+                var sample = new BikeRentalData
+                {
+                    Season = 3,
+                    Month = 7,
+                    Hour = 18,
+                    Holiday = 0,
+                    Weekday = 2,
+                    WorkingDay = 1,
+                    WeatherCondition = 1,
+                    Temperature = 26,
+                    Humidity = 55,
+                    Windspeed = 10
+                };
+
+                Console.WriteLine("\t*My data: " + sample.ToString() + "\n");
+
+
+                //4.3. We send our data to the model
+                var prediction = predictor.Predict( sample );
+
+                //4.4. Displaying the prediction
+                Console.WriteLine($"\t*Rental type: {(prediction.PredictedRentalType ? "long-term" : "short-term")}, " +
+                                    $"probability = {prediction.Probability:P1}");
+
+
+
+
+
             }
             catch( Exception ex )
             {
