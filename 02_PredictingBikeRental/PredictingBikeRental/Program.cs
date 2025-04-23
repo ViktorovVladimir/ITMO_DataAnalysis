@@ -71,16 +71,16 @@ namespace PredictingBikeRental
                 //4.2. We prepare any of our data for which we will receive a prediction
                 var sample = new BikeRentalData
                 {
-                    Season = 3,
-                    Month = 7,
-                    Hour = 18,
+                    Season = 4,
+                    Month = 8,
+                    Hour = 10,
                     Holiday = 0,
-                    Weekday = 2,
+                    Weekday = 5,
                     WorkingDay = 1,
                     WeatherCondition = 1,
-                    Temperature = 26,
-                    Humidity = 55,
-                    Windspeed = 10
+                    Temperature = 31,
+                    Humidity = 45,
+                    Windspeed = 1
                 };
 
                 Console.WriteLine("\t*My data: " + sample.ToString() + "\n");
